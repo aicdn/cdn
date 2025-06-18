@@ -1,0 +1,40 @@
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #weixin-tip-box {
+            display: none;
+            position: fixed;
+            right: 0;
+            top: 4px;
+            align-items: center;
+        }
+        .weixin-tip {
+            background: #40b2a8;
+            z-index: 100;
+            padding: 8px;
+            border-radius: 8px;
+            margin-right: 8px
+        }
+
+        .weixin-tip p {
+            text-align: center;
+            font-size: 14px;
+            color: #fff
+        }
+
+        .weixin-tip p.content {
+            text-align: center;
+            font-size: 14px
+        }
+
+        .triangle_border_up {
+            width: 0;
+            height: 0;
+            border-width: 0 6px 12px;
+            border-style: solid;
+            border-color: transparent transparent #40b2a8;
+            /*透明 透明  灰*/
+            margin-left: 114px
+        }

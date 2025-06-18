@@ -1,0 +1,187 @@
+/* 去除通知栏 右上角 X */
+.notify-render .hope-close-button{
+	display: none;
+}
+ 
+/*渐变背景CSS*/
+#canvas-basic {
+	position: fixed;
+	display: block;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: -999;
+    backdrop-filter: blur(10px)!important;
+}
+ 
+ 
+/*顶部*/
+  #root > .header {
+    background: rgba(255, 255, 255, 0);
+  }
+
+  /*导航条*/
+  /*白天模式*/
+  .hope-ui-light .body > .nav {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: var(--hope-radii-xl);
+    color: #99ffcc;
+  }
+  /*夜间模式*/
+  .hope-ui-dark .body > .nav {
+    background-color: rgb(0 0 0 / 50%);
+    border-radius: var(--hope-radii-xl);
+  }
+  /*隐藏导航条遮罩*/
+  .body > .nav::after {
+    display: none;
+  }
+ 
+ 
+/*主列表夜间模式透明，50%这数值是控制透明度大小的*/
+.obj-box.hope-stack.hope-c-dhzjXW.hope-c-PJLV.hope-c-PJLV-iigjoxS-css{
+background-color:rgb(0 0 0 / 50%) !important;
+}
+/*readme夜间模式透明，50%这数值是控制透明度大小的*/
+.hope-c-PJLV.hope-c-PJLV-iiuDLME-css{
+background-color:rgb(0 0 0 / 50%) !important;
+}
+/*主列表透明*/
+.obj-box.hope-stack.hope-c-dhzjXW.hope-c-PJLV.hope-c-PJLV-igScBhH-css {
+background-color: rgba(255, 255, 255, 0.2) !important;
+color: #99ffcc;
+ 
+}
+/*readme透明*/
+.hope-c-PJLV.hope-c-PJLV-ikSuVsl-css{
+background-color: rgba(255, 255, 255, 0.2) !important;
+backdrop-filter: blur(10px)!important;
+}
+/*顶部右上角切换按钮透明*/
+.hope-c-ivMHWx-hZistB-cv.hope-icon-button{
+background-color: rgba(255, 255, 255, 0.2) !important;
+backdrop-filter: blur(10px)!important;
+}
+/*右下角侧边栏按钮透明*/
+.hope-c-PJLV-ijgzmFG-css{
+background-color: rgba(255, 255, 255, 0.2) !important;
+backdrop-filter: blur(10px)!important;
+}
+ 
+/*白天模式代码块透明*/
+.hope-ui-light pre{
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px)!important;
+}
+/*夜间模式代码块透明*/
+.hope-ui-dark pre {
+    background-color: rgba(255, 255, 255, 0) !important;
+    backdrop-filter: blur(10px)!important;
+}
+ 
+/*白天模式 搜索主体+毛玻璃*/
+.hope-ui-light .hope-c-PJLV-iiBaxsN-css{
+   background: rgba(255,255,255,0.2)!important;
+   backdrop-filter: blur(10px)!important;
+}
+ 
+/*白天模式 搜索栏输入框+毛玻璃*/
+.hope-ui-light .hope-c-kvTTWD-hYRNAb-variant-filled{
+   background: rgba(255,255,255,0.2)!important;
+   backdrop-filter: blur(10px)!important;
+}
+ 
+/*白天模式 搜索按钮+毛玻璃*/
+.hope-ui-light .hope-c-PJLV-ikEIIxw-css{
+   background: rgba(255,255,255,0.2)!important;
+   backdrop-filter: blur(10px)!important;
+}
+ 
+/*夜间模式搜索主体+毛玻璃*/
+.hope-ui-dark .hope-c-PJLV-iiBaxsN-css{
+    background: rgb(0 0 0 / 10%)!important;
+    backdrop-filter: blur(10px)!important;
+}
+ 
+/*夜间模式搜索栏+毛玻璃*/
+.hope-ui-dark .hope-c-kvTTWD-hYRNAb-variant-filled{
+    background: rgb(0 0 0 / 10%)!important;
+    backdrop-filter: blur(10px)!important;
+}
+ 
+/*夜间模式 搜索按钮+毛玻璃*/
+.hope-ui-dark .hope-c-PJLV-ikEIIxw-css{
+    background: rgb(0 0 0 / 10%)!important;
+    backdrop-filter: blur(10px)!important;
+} 
+ 
+ 
+/*底部CSS，.App .table这三个一起的*/
+dibu {
+    border-top: 0px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+.App {
+    min-height: 85vh;
+}
+.table {
+    margin: auto;
+}
+ 
+ 
+/*去掉底部*/
+.footer {
+    display: none !important;
+}
+ 
+/*全局字体*/
+*{font-family:LXGW WenKai}
+*{font-weight:bold}
+body {font-family: LXGW WenKai;}
+
+
+
+ 
+/*以下为评论系统专用*/
+/*适配大小契合度*/
+.newValine{
+width: min(96%, 940px);
+flex-direction: column;
+ row-gap: var(--hope-space-2);
+ border-radius: var(--hope-radii-xl);
+ padding: var(--hope-space-2);
+ box-shadow: var(--hope-shadows-lg);
+}
+/*评论区 - 白天模式透明度*/
+.hope-ui-light .newValine{
+background-color: rgba(255, 255, 255, 0.2) !important;
+border-width:0px;
+backdrop-filter: blur(10px)!important;
+}
+/*评论区 - 夜间模式透明度*/
+.hope-ui-dark .newValine{
+background-color:rgb(0 0 0 / 80%) !important;
+border-width:0px;
+backdrop-filter: blur(10px)!important;
+}
+/*输入栏里面跳舞的小人背景图*/
+.vedit{
+    background-image:url(https://cdn.jsdelivr.net/gh/anwen-anyi/imgAnwen/images/OuNiJiang.gif); 
+    background-size:contain;
+    background-repeat:no-repeat;
+    background-position:right bottom;
+    transition:all 0.5s ease-in-out 0s;
+    }
+    textarea#comment-textarea:focus{
+    background-position-y:120px;
+    transition:all 0.5s ease-in-out 0s;
+}	
+
+
