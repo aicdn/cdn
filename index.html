@@ -3,399 +3,475 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自用CDN静态资源分享</title>
+    <title>JavaScript资源链接分享平台 - 列表模式</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --dark-bg: #111827;
+            --list-bg: #1f2937;
+            --border-color: #374151;
+            --text-color: #f3f4f6;
+            --success-color: #10b981;
+            --hover-bg: #2d3748;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
         }
         
         body {
-            background-color: #f7f9fc;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
             line-height: 1.6;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%);
-            min-height: 100vh;
         }
         
         header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 2rem;
             text-align: center;
-            padding: 30px 0 20px;
-            margin-bottom: 20px;
+            position: relative;
+            z-index: 10;
         }
         
         h1 {
             font-size: 2.2rem;
-            margin-bottom: 8px;
-            color: #2c3e50;
-            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
         
         .subtitle {
-            font-size: 1rem;
-            color: #7f8c8d;
-            max-width: 500px;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            max-width: 800px;
             margin: 0 auto;
         }
         
-        .search-container {
-            max-width: 700px;
-            margin: 0 auto 25px;
-            padding: 0 15px;
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .search-filter {
+            background-color: var(--list-bg);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
         }
         
         .search-box {
-            display: flex;
-            background: white;
-            border-radius: 50px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            position: relative;
         }
         
         .search-box input {
-            flex: 1;
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            background-color: #374151;
             border: none;
-            padding: 15px;
-            font-size: 0.95rem;
-            background: transparent;
-            outline: none;
-        }
-        
-        .search-box button {
-            padding: 0 22px;
-            border: none;
-            background: #3498db;
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
         
-        .search-box button:hover {
-            background: #2980b9;
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
         }
         
-        .link-list {
-            background: white;
-            border-radius: 15px;
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        
+        .resource-list {
+            list-style: none;
+            background-color: var(--list-bg);
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
         }
         
-        .list-item {
-            padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
+        .resource-item {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
             transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
         }
         
-        .list-item:last-child {
+        .resource-item:last-child {
             border-bottom: none;
         }
         
-        .list-item:hover {
-            background-color: #f9fbfd;
-            transform: translateX(5px);
+        .resource-item:hover {
+            background-color: var(--hover-bg);
         }
         
         .item-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 1rem;
         }
         
         .item-title {
-            font-size: 1.2rem;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+        
+        .item-badge {
+            background-color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 600;
         }
         
-        .item-title i {
-            margin-right: 10px;
-            color: #3498db;
+        .item-description {
+            margin-bottom: 1rem;
+            color: #d1d5db;
+            line-height: 1.7;
         }
         
-        .item-desc {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-        
-        .link-container {
-            position: relative;
-            margin-bottom: 15px;
-        }
-        
-        .code-block {
-            background: #f1f5f9;
+        pre {
             border-radius: 8px;
-            padding: 15px;
-            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .hljs {
+            font-family: 'Fira Code', monospace;
             font-size: 0.9rem;
             line-height: 1.5;
-            overflow-x: auto;
-            position: relative;
+            border-radius: 6px;
+        }
+        
+        .item-footer {
+            display: flex;
+            justify-content: flex-end;
         }
         
         .copy-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #3498db;
-            color: white;
+            padding: 0.5rem 1.25rem;
+            background-color: #374151;
+            color: #d1d5db;
             border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: 500;
-            font-size: 0.85rem;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            transition: all 0.3s ease;
+            gap: 0.5rem;
         }
         
         .copy-btn:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
+            background-color: var(--primary-color);
+            color: white;
         }
         
-        .copy-btn:active {
-            transform: translateY(0);
+        .copy-btn.success {
+            background-color: var(--success-color);
+            color: white;
         }
         
-        .copy-btn i {
-            margin-right: 6px;
-            font-size: 0.9rem;
-        }
-        
-        .tag-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .tag {
-            background: #e0f0fa;
-            color: #3498db;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .pulse {
+            animation: pulse 0.5s;
         }
         
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
+            50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
         
-        .copied-confirm {
+        .toast {
             position: fixed;
-            top: 25px;
-            right: 25px;
-            background: rgba(46, 204, 113, 0.95);
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--success-color);
             color: white;
-            padding: 12px 20px;
+            padding: 1rem 2rem;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            display: none;
-            animation: fadeIn 0.4s ease;
-            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateX(150%);
+            transition: transform 0.3s ease-out;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .list-item:nth-child(1) { animation: fadeIn 0.5s ease forwards; }
-        .list-item:nth-child(2) { animation: fadeIn 0.7s ease forwards; }
-        .list-item:nth-child(3) { animation: fadeIn 0.9s ease forwards; }
-        .list-item:nth-child(4) { animation: fadeIn 1.1s ease forwards; }
+        .toast.show {
+            transform: translateX(0);
+        }
         
-        footer {
+        .empty-state {
+            padding: 3rem;
             text-align: center;
-            padding: 30px 0;
-            margin-top: 20px;
-            color: #95a5a6;
-            font-size: 0.85rem;
+            background-color: var(--list-bg);
+            border-radius: 12px;
         }
         
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .subtitle {
-                font-size: 0.95rem;
-            }
-            
-            .list-item {
-                padding: 15px;
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #e5e7eb;
+        }
+        
+        .empty-state p {
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .item-header {
+                flex-wrap: wrap;
+                gap: 0.5rem;
             }
             
             .item-title {
                 font-size: 1.1rem;
             }
+        }
+        
+        @media (max-width: 768px) {
+            .search-filter {
+                flex-direction: column;
+            }
             
-            .code-block {
-                padding: 12px;
-                font-size: 0.85rem;
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .resource-item {
+                padding: 1rem;
             }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <header>
-        <h1>静态资源列表</h1>
-        <p class="subtitle">整理实用资源链接，点击复制按钮轻松使用</p>
+        <h1>JavaScript资源链接分享平台</h1>
+        <p class="subtitle">列表模式展示精选JavaScript资源，支持高亮显示和一键复制功能</p>
     </header>
     
-    <div class="search-container">
-        <div class="search-box">
-            <input type="text" placeholder="搜索链接资源...">
-            <button><i class="fas fa-search"></i> 搜索</button>
-        </div>
-    </div>
-    
-    <div class="link-list">
-        <div class="list-item">
-            <div class="item-header">
-                <h2 class="item-title"><i class="fas fa-laptop-code"></i> jquery资源</h2>
-            </div>
-            <p class="item-desc">实用的前端开发资源库</p>
-            <div class="link-container">
-                <div class="code-block">
-				<pre><code><script>https://cdn.eees.cn/js/jquery.min.js</script></code></pre>
-                    <button class="copy-btn" onclick="copyLink('<script>https://cdn.eees.cn/js/jquery.min.js</script>')">
-                        <i class="fas fa-copy"></i> 复制
-                    </button>
-                </div>
-            </div>
-            <div class="tag-container">
-                <span class="tag">前端框架</span>
-                <span class="tag">开源项目</span>
-                <span class="tag">开发工具</span>
+    <div class="container">
+        <div class="search-filter">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="搜索JavaScript资源...">
             </div>
         </div>
         
-        <div class="list-item">
-            <div class="item-header">
-                <h2 class="item-title"><i class="fas fa-palette"></i> Joe主题静态资源</h2>
-            </div>
-            <p class="item-desc">typecho主题</p>
-            <div class="link-container">
-                <div class="code-block">
-                    https://cdn.eees.cn/Joe
-                    <button class="copy-btn" onclick="copyLink('https://cdn.eees.cn/Joe')">
-                        <i class="fas fa-copy"></i> 复制
+        <ul class="resource-list" id="resourceList">
+            <!-- Axios -->
+            <li class="resource-item">
+                <div class="item-header">
+                    <span class="item-title">jquery库</span>
+                    <span class="item-badge">请求库</span>
+                </div>
+                <p class="item-description">jquery</p>
+                <pre><code class="language-html">&lt;script src="https://cdn.eees.cn/js/jquery.min.js"&gt;&lt;/script&gt;</code></pre>
+                <div class="item-footer">
+                    <button class="copy-btn" data-copy='&lt;script src="https://cdn.eees.cn/js/jquery.min.js"&gt;&lt;/script&gt;'>
+                        <i class="fas fa-copy"></i>
+                        <span>复制链接</span>
                     </button>
                 </div>
-            </div>
-            <div class="tag-container">
-                <span class="tag">主题</span>
-                <span class="tag">UI设计</span>
-                <span class="tag">资源下载</span>
-            </div>
-        </div>
-        
-        <div class="list-item">
-            <div class="item-header">
-                <h2 class="item-title"><i class="fas fa-book"></i> 技术文档</h2>
-            </div>
-            <p class="item-desc">MDN 官方 JavaScript 文档</p>
-            <div class="link-container">
-                <div class="code-block">
-                    https://developer.mozilla.org/zh-CN/docs/Web/JavaScript
-                    <button class="copy-btn" onclick="copyLink('https://developer.mozilla.org/zh-CN/docs/Web/JavaScript')">
-                        <i class="fas fa-copy"></i> 复制
+            </li>
+            
+            <!-- Lodash -->
+            <li class="resource-item">
+                <div class="item-header">
+                    <span class="item-title">fontawesome图标库</span>
+                    <span class="item-badge">实用工具</span>
+                </div>
+                <p class="item-description">提供模块化、高性能的实用函数，用于处理数组、对象、字符串等数据类型</p>
+                <pre><code class="language-html">&lt;script src="https://cdn.eees.cn/fontawesome/js/fontawesome.min.js"&gt;&lt;/script&gt;</code></pre>
+                <div class="item-footer">
+                    <button class="copy-btn" data-copy='&lt;script src="https://cdn.eees.cn/fontawesome/js/fontawesome.min.js"&gt;&lt;/script&gt;'>
+                        <i class="fas fa-copy"></i>
+                        <span>复制链接</span>
                     </button>
                 </div>
-            </div>
-            <div class="tag-container">
-                <span class="tag">文档</span>
-                <span class="tag">编程</span>
-                <span class="tag">参考手册</span>
-            </div>
-        </div>
-        
-        <div class="list-item">
-            <div class="item-header">
-                <h2 class="item-title"><i class="fas fa-video"></i> 在线课程</h2>
-            </div>
-            <p class="item-desc">前端开发完整学习路径</p>
-            <div class="link-container">
-                <div class="code-block">
-                    https://www.freecodecamp.org/learn
-                    <button class="copy-btn" onclick="copyLink('https://www.freecodecamp.org/learn')">
-                        <i class="fas fa-copy"></i> 复制
+            </li>
+            
+            <!-- Chart.js -->
+            <li class="resource-item">
+                <div class="item-header">
+                    <span class="item-title">Joe</span>
+                    <span class="item-badge">typecho主题</span>
+                </div>
+                <p class="item-description">简单灵活的图表库，支持8种图表类型，响应式设计并支持混合使用</p>
+                <pre><code class="language-html">https://cdn.eees.cn/Joe</code></pre>
+                <div class="item-footer">
+                    <button class="copy-btn" data-copy='https://cdn.eees.cn/Joe'>
+                        <i class="fas fa-copy"></i>
+                        <span>复制链接</span>
                     </button>
                 </div>
-            </div>
-            <div class="tag-container">
-                <span class="tag">学习资源</span>
-                <span class="tag">免费课程</span>
-                <span class="tag">前端开发</span>
-            </div>
-        </div>
+            </li>
+            
+            <!-- Highlight.js -->
+            <li class="resource-item">
+                <div class="item-header">
+                    <span class="item-title">Highlight.js语法高亮</span>
+                    <span class="item-badge">开发工具</span>
+                </div>
+                <p class="item-description">轻量级的语法高亮库，支持189种语言和94种样式主题，易于使用</p>
+                <pre><code class="language-html">&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css"&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;hljs.highlightAll();&lt;/script&gt;</code></pre>
+                <div class="item-footer">
+                    <button class="copy-btn" data-copy='&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css"&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;hljs.highlightAll();&lt;/script&gt;'>
+                        <i class="fas fa-copy"></i>
+                        <span>复制链接</span>
+                    </button>
+                </div>
+            </li>
+            
+            <!-- Moment.js -->
+            <li class="resource-item">
+                <div class="item-header">
+                    <span class="item-title">Moment.js日期库</span>
+                    <span class="item-badge">日期处理</span>
+                </div>
+                <p class="item-description">强大的日期操作库，用于解析、验证、操作和格式化日期</p>
+                <pre><code class="language-html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"&gt;&lt;/script&gt;</code></pre>
+                <div class="item-footer">
+                    <button class="copy-btn" data-copy='&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"&gt;&lt;/script&gt;'>
+                        <i class="fas fa-copy"></i>
+                        <span>复制链接</span>
+                    </button>
+                </div>
+            </li>
+            
+            <!-- Animate.css -->
+            <li class="resource-item">
+                <div class="item-header">
+                    <span class="item-title">Animate.css动画库</span>
+                    <span class="item-badge">动画效果</span>
+                </div>
+                <p class="item-description">即插即用的CSS动画库，提供超过70种跨浏览器的CSS3动画效果</p>
+                <pre><code class="language-html">&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"&gt;</code></pre>
+                <div class="item-footer">
+                    <button class="copy-btn" data-copy='&lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"&gt;'>
+                        <i class="fas fa-copy"></i>
+                        <span>复制链接</span>
+                    </button>
+                </div>
+            </li>
+        </ul>
     </div>
     
-    <div id="copiedConfirmation" class="copied-confirm">
-        <i class="fas fa-check-circle"></i> 链接已复制到剪贴板！
+    <div class="toast" id="copyToast">
+        <i class="fas fa-check-circle"></i> 代码已复制到剪贴板！
     </div>
     
-    <footer>
-        <p>简洁链接分享 &copy; 2023 | 列表模式</p>
-    </footer>
-
     <script>
-        // 链接复制功能
-        function copyLink(link) {
-            const textarea = document.createElement('textarea');
-            textarea.value = link;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
+        // 初始化Highlight.js
+        document.addEventListener('DOMContentLoaded', function() {
+            hljs.highlightAll();
             
-            // 显示复制成功提示
-            const confirmation = document.getElementById('copiedConfirmation');
-            confirmation.style.display = 'block';
-            confirmation.style.animation = 'pulse 0.6s ease';
+            // 添加复制按钮点击事件
+            const copyButtons = document.querySelectorAll('.copy-btn');
+            const copyToast = document.getElementById('copyToast');
             
-            // 3秒后隐藏提示
-            setTimeout(() => {
-                confirmation.style.animation = 'none';
-                setTimeout(() => {
-                    confirmation.style.display = 'none';
-                }, 300);
-            }, 2000);
-        }
-        
-        // 列表项加载动画
-        document.addEventListener('DOMContentLoaded', () => {
-            const items = document.querySelectorAll('.list-item');
-            items.forEach((item) => {
-                item.style.opacity = '0';
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const code = this.getAttribute('data-copy');
+                    
+                    // 复制到剪贴板
+                    navigator.clipboard.writeText(code).then(() => {
+                        // 添加复制成功样式
+                        this.classList.add('success');
+                        this.innerHTML = '<i class="fas fa-check"></i> 复制成功';
+                        
+                        // 添加动画效果
+                        this.classList.add('pulse');
+                        
+                        // 显示提示信息
+                        copyToast.classList.add('show');
+                        
+                        // 2秒后恢复按钮状态
+                        setTimeout(() => {
+                            this.classList.remove('success', 'pulse');
+                            this.innerHTML = '<i class="fas fa-copy"></i> 复制链接';
+                        }, 2000);
+                        
+                        // 3秒后隐藏提示信息
+                        setTimeout(() => {
+                            copyToast.classList.remove('show');
+                        }, 3000);
+                    }).catch(err => {
+                        console.error('复制失败:', err);
+                    });
+                });
             });
             
-            setTimeout(() => {
-                items.forEach((item) => {
-                    item.style.opacity = '1';
+            // 添加搜索功能
+            const searchInput = document.getElementById('searchInput');
+            const resourceList = document.getElementById('resourceList');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const items = document.querySelectorAll('.resource-item');
+                let visibleCount = 0;
+                
+                items.forEach(item => {
+                    const title = item.querySelector('.item-title').textContent.toLowerCase();
+                    const description = item.querySelector('.item-description').textContent.toLowerCase();
+                    const code = item.querySelector('code').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm) || code.includes(searchTerm)) {
+                        item.style.display = '';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
                 });
-            }, 300);
+                
+                // 显示空状态
+                let emptyState = document.querySelector('.empty-state');
+                
+                if (visibleCount === 0) {
+                    if (!emptyState) {
+                        const emptyStateEl = document.createElement('div');
+                        emptyStateEl.className = 'empty-state';
+                        emptyStateEl.innerHTML = `
+                            <h3>未找到匹配的资源</h3>
+                            <p>当前没有匹配的JavaScript资源，请尝试其他搜索关键词。</p>
+                        `;
+                        resourceList.appendChild(emptyStateEl);
+                    }
+                } else if (emptyState) {
+                    emptyState.remove();
+                }
+            });
         });
     </script>
 </body>
